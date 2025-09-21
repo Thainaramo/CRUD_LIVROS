@@ -1,0 +1,15 @@
+{
+  "name": "crud_livros",
+  "version": "1.0.0",
+  "description": "CRUD de livros - fase inicial TDD (Create)",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "test": "jest --runInBand"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "29.7.0"
+  }
+}
