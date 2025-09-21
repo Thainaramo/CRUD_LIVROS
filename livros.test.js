@@ -12,3 +12,18 @@ test('createLivro deve rejeitar titulo vazio', async () => {
 test('createLivro deve rejeitar autor vazio', async () => {
   await expect(repo.create({ titulo: 'Livro', autor: '   ' })).rejects.toThrow(/autor/i);
 });
+
+// ---- READ ----
+test('findByTitulo deve retornar livro existente', async () => {
+  await repo._reset();
+  await repo.create({ titulo: 'O Alienista', autor: 'Machado' });
+  const achado = await repo.findByTitulo('O Alienista');
+  expect(achado).toEqual({ titulo: 'O Alienista', autor: 'Machado' });
+});
+
+test('findByTitulo deve retornar null quando não existe', async () => {
+  await repo._reset();
+  await repo.create({ titulo: 'Memórias Póstumas', autor: 'Machado' });
+  const achado = await repo.findByTitulo('Dom Casmurro');
+  expect(achado).toBeNull();
+});

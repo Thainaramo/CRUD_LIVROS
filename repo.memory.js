@@ -10,10 +10,14 @@ function _clone(item) {
   return { titulo: item.titulo, autor: item.autor };
 }
 
+function _norm(v) {
+  return typeof v === 'string' ? v.trim() : '';
+}
+
 async function create({ titulo, autor } = {}) {
   _validateNonEmpty(titulo, 'titulo');
   _validateNonEmpty(autor, 'autor');
-  const item = { titulo: titulo.trim(), autor: autor.trim() };
+  const item = { titulo: _norm(titulo), autor: _norm(autor) };
   _data.push(item);
   return _clone(item);
 }
@@ -22,6 +26,13 @@ async function list() {
   return _data.map(_clone);
 }
 
+async function findByTitulo(titulo) {
+  if (typeof titulo !== 'string') return null;
+  const t = _norm(titulo);
+  const found = _data.find(item => item.titulo === t);
+  return found ? _clone(found) : null;
+}
+
 async function _reset() { _data = []; }
 
-module.exports = { create, list, _reset };
+module.exports = { create, list, findByTitulo, _reset };
