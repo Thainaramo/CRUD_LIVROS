@@ -27,3 +27,25 @@ test('findByTitulo deve retornar null quando não existe', async () => {
   const achado = await repo.findByTitulo('Dom Casmurro');
   expect(achado).toBeNull();
 });
+
+// ---- UPDATE ----
+test('updateLivro deve atualizar autor mantendo título', async () => {
+  await repo._reset();
+  await repo.create({ titulo: 'Quincas Borba', autor: 'Machado' });
+  const atualizado = await repo.update({ titulo: 'Quincas Borba', autor: 'Machado de Assis' });
+  expect(atualizado).toEqual({ titulo: 'Quincas Borba', autor: 'Machado de Assis' });
+  const achado = await repo.findByTitulo('Quincas Borba');
+  expect(achado).toEqual({ titulo: 'Quincas Borba', autor: 'Machado de Assis' });
+});
+
+test('updateLivro deve retornar null se livro não existir', async () => {
+  await repo._reset();
+  const atualizado = await repo.update({ titulo: 'Livro Inexistente', autor: 'Alguém' });
+  expect(atualizado).toBeNull();
+});
+
+test('updateLivro deve rejeitar autor vazio', async () => {
+  await repo._reset();
+  await repo.create({ titulo: 'Capitu', autor: 'Machado' });
+  await expect(repo.update({ titulo: 'Capitu', autor: '   ' })).rejects.toThrow(/autor/i);
+});

@@ -14,6 +14,11 @@ function _norm(v) {
   return typeof v === 'string' ? v.trim() : '';
 }
 
+function _indexByTitulo(titulo) {
+  const t = _norm(titulo);
+  return _data.findIndex(item => item.titulo === t);
+}
+
 async function create({ titulo, autor } = {}) {
   _validateNonEmpty(titulo, 'titulo');
   _validateNonEmpty(autor, 'autor');
@@ -28,11 +33,20 @@ async function list() {
 
 async function findByTitulo(titulo) {
   if (typeof titulo !== 'string') return null;
-  const t = _norm(titulo);
-  const found = _data.find(item => item.titulo === t);
-  return found ? _clone(found) : null;
+  const idx = _indexByTitulo(titulo);
+  if (idx === -1) return null;
+  return _clone(_data[idx]);
+}
+
+async function update({ titulo, autor } = {}) {
+  _validateNonEmpty(titulo, 'titulo');
+  _validateNonEmpty(autor, 'autor');
+  const idx = _indexByTitulo(titulo);
+  if (idx === -1) return null;
+  _data[idx] = { titulo: _data[idx].titulo, autor: _norm(autor) };
+  return _clone(_data[idx]);
 }
 
 async function _reset() { _data = []; }
 
-module.exports = { create, list, findByTitulo, _reset };
+module.exports = { create, list, findByTitulo, update, _reset };
